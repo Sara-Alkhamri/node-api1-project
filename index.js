@@ -81,6 +81,29 @@ server.delete('/api/users/:id', (req, res) => {
     })
 })
 
+//put
+server.put('/api/users/:id', (req,res) => {
+    const {name, bio} = req.body;
+
+    if (!name || !bio) {
+        res.status(400).json({message: "Please provide name and bio for the user."})
+    } else {
+        dbModel.update(req.params.id, req.body)
+        .then(user => {
+            if (user) {
+                res.status(200).json(user);
+            }
+            else {
+                res.status(404).json({message: "The user with the specified ID does not exist."})
+            }
+        })
+        .catch(() => {
+            res.status(500).json({message: "The user information could not be modified."})
+        })
+        
+    }
+
+})
 
 
 //watch for connections on port 5000
