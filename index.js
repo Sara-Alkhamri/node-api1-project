@@ -10,28 +10,28 @@ const server = express(); //creates the server
 // teach express how to read JSON fro the request body
 server.use(express.json()); // <<<<<<<<<<<<<<<<<<<<<<<<<< we need this for POST and PUT
 
-// server.post('/api/users', (req,res) => {
-//     // axios.post(url, data);
-//   // get the hub data from the request
-//   const dbData = req.body;
+server.post('/api/users', (req,res) => {
+    // axios.post(url, data);
+  // get the hub data from the request
+  const {name, bio} = req.body;
 
-//   // validate the data sent by he client
-//   // NEVER TRUST THE CLIENT!!!!!
-//   if (!dbData.name) {
-//     res.status(400).json({ message: 'gimme a name' });
-//   } else {
-//     // add the hub to the database
-//     dbModel
-//       .add(dbData)
-//       .then(hub => {
-//         // send the hub back to the client
-//         res.json(hub); //.json() will set the right headers and convert to JSON
-//       })
-//       .catch(error => {
-//         res.json({ message: 'error saving the hub' });
-//       });
-//   }
-// })
+  // validate the data sent by he client
+  // NEVER TRUST THE CLIENT!!!!!
+  if (!name || !bio) {
+    res.status(400).json({ message: 'Please provide name and bio for the user.' });
+  } else {
+    // add the hub to the database
+    dbModel
+      .insert(req.body)
+      .then(db => {
+        // send the hub back to the client
+        res.status(201).json(db); //.json() will set the right headers and convert to JSON
+      })
+      .catch(() => {
+        res.status(500).json({ message: 'There was an error while saving the user to the database' });
+      });
+  }
+})
 
 //get 
 server.get('/api/users', (req,res) => {
