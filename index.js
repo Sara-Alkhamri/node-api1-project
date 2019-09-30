@@ -66,6 +66,21 @@ server.get('/api/users/:id', (req, res) => {
     })
 });
 
+//delete
+server.delete('/api/users/:id', (req, res) => {
+    dbModel.remove(req.params.id)
+    .then(user => {
+        if (user && user > 0) {
+            res.status(200).json({message: 'user deleted'})
+        } else {
+            res.status(404).json({message: 'The user with the specified ID does not exist.'})
+        }
+    })
+    .catch(() => {
+        res.status(500).json({message: 'The user could not be removed'})
+    })
+})
+
 
 
 //watch for connections on port 5000
